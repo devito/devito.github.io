@@ -1,4 +1,4 @@
-var counter = 0;
+var counter = counter || 0;
 (function() {
     counter++;
     console.log(`This IIFE is called!`);

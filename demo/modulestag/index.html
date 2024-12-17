@@ -11,6 +11,11 @@
     <script type="module" src="/script/iife_script.js" ></script>
     <script>
         window.globalFunction();
+        console.log("expected to fail because module is defer'ed and thus this script happens sooner")
+    </script>
+    <script defer>
+        window.globalFunction();
+        console.log("expected to work since script is defer");
     </script>
 </body>
 </html>

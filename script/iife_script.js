@@ -1,7 +1,9 @@
+var counter = 0;
 (function() {
-    console.log("This is an IIFE!");
+    counter++;
+    console.log(`This IIFE is called!`);
 
     window["globalFunction"] = function() {
-        console.log("global function called");
+        console.log(`global function initialized ${counter} times`);
     }
 })();

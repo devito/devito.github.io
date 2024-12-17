@@ -8,6 +8,17 @@
 <body>
     <h1>This is a demo for loading resources as modules on tag</h1>
     <p>Look in console</p>
+    <p>Flow is the following:</p>
+    <ul>
+        <li>add iife_script as module script tag <code>script type="module" src="/script/iife_script.js" </code></li>
+        <li>script has a global function with a global counter that increments per load</li>
+        <li>call function with regular inline script tag</li>
+        <li>call function with defer inline script tag</li>
+        <li>call function with module inline script tag</li>
+        <li>load iife_script again with <code>script type="module" src="/script/iife_script.js"</code></li>
+        <li>call function with module inline script tag one last time</li>
+        <li>expect one load only on the page</li>
+    </ul>
     <script type="module" src="/script/iife_script.js" ></script>
     <script>
         console.log("first call to global");

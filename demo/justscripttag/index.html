@@ -8,6 +8,15 @@
 <body>
     <h1>This is a demo for loading resources with html elments</h1>
     <p>Look in console</p>
+    <p>Flow is the following:</p>
+    <ul>
+        <li>add iife_script as module script tag <code>script src="/script/iife_script.js" </code></li>
+        <li>script has a global function with a global counter that increments per load</li>
+        <li>call function with regular inline script tag</li>
+        <li>load iife_script again with <code>scriptsrc="/script/iife_script.js"</code></li>
+        <li>call function with module regular script tag one last time</li>
+        <li>in console will see that script is loaded twice and state is updated</li>
+    </ul>
     <script src="/script/iife_script.js" ></script>
     <script>
         window.globalFunction();

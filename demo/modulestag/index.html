@@ -10,10 +10,17 @@
     <p>Look in console</p>
     <script type="module" src="/script/iife_script.js" ></script>
     <script>
+        console.log("first call to global");
         window.globalFunction();
         console.log("expected to fail because module is defer'ed and thus this script happens sooner")
     </script>
     <script defer>
+        console.log("second call to global");
+        window.globalFunction();
+        console.log("expected to work since script is defer");
+    </script>
+    <script type="module">
+        console.log("thrid call to global");
         window.globalFunction();
         console.log("expected to work since script is defer");
     </script>

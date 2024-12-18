@@ -23,12 +23,11 @@
     <script>
         console.log("first call to global");
         window.globalFunction();
-        console.log("expected to fail because module is defer'ed and thus this script happens sooner")
     </script>
+    <script src="/script/iife_script.js" ></script>
     <script defer>
         console.log("second call to global");
         window.globalFunction();
-        console.log("expected to fail since module defer is after regular defer");
     </script>
     <script type="module">
         console.log("thrid call to global");
@@ -37,6 +36,11 @@
     <script type="module" src="/script/iife_script.js" ></script>
     <script type="module">
         console.log("fourth call to global");
+        window.globalFunction();
+    </script>
+    <script type="module" src="/script/iife_script.js" ></script>
+    <script type="module">
+        console.log("Fifth call to global");
         window.globalFunction();
     </script>
 </body>

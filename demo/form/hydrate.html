@@ -1,13 +1,12 @@
 <demo-tag>
     <template shadowrootmode="open">
-        <p>This is the shadow dom</p>
+        <button id="dec">-</button><span id="display"><slot>5</slot></span><button id="inc">+</button>
         <slot></slot>
     </template>
-    <script>console.log("added first demo-tag");</script>
-    <p>This is light dom</p>
+    5<script>console.log("added first demo-tag");</script>
 </demo-tag>
 <script type="module">
-    class DemoTag extends HTMLElement {
+    class TemplatedElement extends HTMLElement {
         static template = undefined;
  
         constructor() {
@@ -29,24 +28,40 @@
                 if (!internals?.shadowRoot) {
                     this.attachShadow({mode: 'open'});
                     this.shadowRoot.innerHTML = DemoTag.template;
-                }                
+                }
             }
+        }
+    }
+    class DemoTag extends TemplatedElement {
+        
+        constructor() {
+            super();
         }
 
         connectedCallback() {
             console.log("Custom element added to page.");                      
 
-            const toggle = () => {
-                console.log("I'm clicked!");
+            // get initial value
+            this.count = this.shadowRoot.getElementById('display').textContent;
+            const updateDisplay = () => {
+                this.shadowRoot.getElementById('display').textContent = this.count;
+            }
+            const increment = () => {
+                this.count++;
+                updateDisplay();
+            };
+            const decrement = () => {
+                this.count--;
+                updateDisplay();
             };
 
-            this.shadowRoot.firstElementChild.addEventListener("click", toggle);
+            this.shadowRoot.getElementById('inc').addEventListener('click', () => increment());
+            this.shadowRoot.getElementById('dec').addEventListener('click', () => decrement());            
         }        
     }
       
     customElements.define("demo-tag", DemoTag);
 </script>
 <demo-tag>
-    <script>console.log("added second demo-tag");</script>
-    <p>I am made after being a custom element</p>
+    90<script>console.log("added second demo-tag");</script>
 </demo-tag>

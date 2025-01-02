@@ -8,19 +8,19 @@
 </demo-tag>
 <script type="module">
     class DemoTag extends HTMLElement {
-        static shadow = undefined;
+        static template = undefined;
  
         constructor() {
             super();
         }
 
         SetupShadow() {
-            if (!DemoTag.shadow) {
+            if (!DemoTag.template) {
                 const supportsDeclarative = HTMLElement.prototype.hasOwnProperty("attachInternals");
                 const internals = supportsDeclarative ? this.attachInternals() : undefined;
 
                 // check for a Declarative Shadow Root.
-                DemoTag.shadow = internals?.shadowRoot;
+                DemoTag.template = internals?.shadowRoot?.innerHTML;
             }
             else {
                 // check if there is internal
@@ -28,7 +28,7 @@
                 if (!internals?.shadowRoot) {
                     //clonedNode = DemoTag.shadow.cloneNode(true);
                     this.attachShadow({mode: 'open'});
-                    this.shadowRoot.appendChild(DemoTag.shadow);
+                    this.shadowRoot.innerHTML(DemoTag.template);
                 }                
             }
         }

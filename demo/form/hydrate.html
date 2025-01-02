@@ -28,7 +28,7 @@
                 if (!internals?.shadowRoot) {
                     //clonedNode = DemoTag.shadow.cloneNode(true);
                     this.attachShadow({mode: 'open'});
-                    this.shadowRoot.innerHTML(DemoTag.template);
+                    this.shadowRoot.innerHTML = DemoTag.template;
                 }                
             }
         }

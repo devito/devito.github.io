@@ -9,6 +9,16 @@
 <script type="module">
     class DemoTag extends HTMLElement {
         static shadow = undefined;
+        SetupShadow() {
+            if (!DemoTag.shadow) {
+                const supportsDeclarative = HTMLElement.prototype.hasOwnProperty("attachInternals");
+                const internals = supportsDeclarative ? this.attachInternals() : undefined;
+
+                // check for a Declarative Shadow Root.
+                DemoTag.shadow = internals?.shadowRoot;
+            }
+        }
+
         constructor() {
             super();
             SetupShadow();
@@ -23,17 +33,7 @@
             };
 
             DemoTag.shadow?.firstElementChild.addEventListener("click", toggle);
-        }
-
-        SetupShadow() {
-            if (!DemoTag.shadow) {
-                const supportsDeclarative = HTMLElement.prototype.hasOwnProperty("attachInternals");
-                const internals = supportsDeclarative ? this.attachInternals() : undefined;
-
-                // check for a Declarative Shadow Root.
-                DemoTag.shadow = internals?.shadowRoot;
-            }
-        }
+        }        
     }
       
     customElements.define("demo-tag", DemoTag);

@@ -9,7 +9,10 @@
     class DemoTag extends HTMLElement {
         constructor() {
             super();
-      
+        }
+
+        connectedCallback() {
+            console.log("Custom element added to page.");
             const supportsDeclarative = HTMLElement.prototype.hasOwnProperty("attachInternals");
             const internals = supportsDeclarative ? this.attachInternals() : undefined;
             

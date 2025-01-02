@@ -1,9 +1,9 @@
 <demo-tag>
     <template shadowrootmode="open">
-        <button id="dec">-</button><span id="display"><slot>5</slot></span><button id="inc">+</button>
+        <button id="dec">-</button><slot name="display"></slot><button id="inc">+</button>
         <slot></slot>
     </template>
-    5<script>console.log("added first demo-tag");</script>
+    <span slot="display">5</span>
 </demo-tag>
 <script type="module">
     class TemplatedElement extends HTMLElement {
@@ -42,9 +42,9 @@
             console.log("Custom element added to page.");                      
 
             // get initial value
-            this.count = this.shadowRoot.getElementById('display').textContent;
+            this.count = this.querySelector('span[slot="display"]').textContent;
             const updateDisplay = () => {
-                this.shadowRoot.getElementById('display').textContent = this.count;
+                this.querySelector('span[slot="display"]').textContent = this.count;
             }
             const increment = () => {
                 this.count++;
@@ -63,5 +63,5 @@
     customElements.define("demo-tag", DemoTag);
 </script>
 <demo-tag>
-    90<script>console.log("added second demo-tag");</script>
+    <span slot="display">90</span>
 </demo-tag>

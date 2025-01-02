@@ -28,7 +28,7 @@
                 if (!internals?.shadowRoot) {
                     clonedNode = DemoTag.shadow.clonedNode(true);
                     this.attachShadow({mode: 'open'});
-                    this.appendChild(clonedNode);
+                    this.shadowRoot.appendChild(clonedNode);
                 }                
             }
         }
@@ -41,7 +41,7 @@
                 console.log("I'm clicked!");
             };
 
-            DemoTag.shadow?.firstElementChild.addEventListener("click", toggle);
+            this.shadowRoot.firstElementChild.addEventListener("click", toggle);
         }        
     }
       

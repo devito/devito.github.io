@@ -15,6 +15,12 @@
             
             // check for a Declarative Shadow Root.
             let shadow = internals?.shadowRoot;
+
+            const toggle = () => {
+                console.log("I'm clicked!");
+            };
+
+            shadow.firstElementChild.addEventListener("click", toggle);
         }
     }
       

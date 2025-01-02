@@ -9,7 +9,14 @@
 <script type="module">
     class DemoTag extends HTMLElement {
         static shadow = undefined;
-        SetupShadow = function() {
+ 
+        constructor() {
+            super();
+           
+            this.SetupShadow();
+        }
+
+        SetupShadow() {
             if (!DemoTag.shadow) {
                 const supportsDeclarative = HTMLElement.prototype.hasOwnProperty("attachInternals");
                 const internals = supportsDeclarative ? this.attachInternals() : undefined;
@@ -19,14 +26,9 @@
             }
         }
 
-        constructor() {
-            super();
-            SetupShadow();
-        }
-
         connectedCallback() {
             console.log("Custom element added to page.");
-            SetupShadow();          
+            this.SetupShadow();          
 
             const toggle = () => {
                 console.log("I'm clicked!");

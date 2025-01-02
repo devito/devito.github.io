@@ -8,17 +8,20 @@
 </demo-tag>
 <script type="module">
     class DemoTag extends HTMLElement {
+        static shadow;
         constructor() {
             super();
         }
 
         connectedCallback() {
             console.log("Custom element added to page.");
-            const supportsDeclarative = HTMLElement.prototype.hasOwnProperty("attachInternals");
-            const internals = supportsDeclarative ? this.attachInternals() : undefined;
-            
-            // check for a Declarative Shadow Root.
-            let shadow = internals?.shadowRoot;
+            if (!shadow) {
+                const supportsDeclarative = HTMLElement.prototype.hasOwnProperty("attachInternals");
+                const internals = supportsDeclarative ? this.attachInternals() : undefined;
+
+                // check for a Declarative Shadow Root.
+                shadow = internals?.shadowRoot;
+            }           
 
             const toggle = () => {
                 console.log("I'm clicked!");

@@ -1,9 +1,25 @@
-<html>
-    <div>
-        <template shadowrootmode="open">
-            <p>This is the shadow dom</p>
-            <slot></slot>
-        </template>
-        <p>This is light dom</p>
-    </div>
-</html>
+<demo-tag>
+    <template shadowrootmode="open">
+        <p>This is the shadow dom</p>
+        <slot></slot>
+    </template>
+    <p>This is light dom</p>
+</demo-tag>
+<script type="demo-tag">
+    class DemoTag extends HTMLElement {
+        constructor() {
+            super();
+      
+            const supportsDeclarative = HTMLElement.prototype.hasOwnProperty("attachInternals");
+            const internals = supportsDeclarative ? this.attachInternals() : undefined;
+            
+            // check for a Declarative Shadow Root.
+            let shadow = internals?.shadowRoot;
+        }
+    }
+      
+    customElements.define("demo-tag", DemoTag);
+</script>
+<demo-tag>
+    <p>I am made after being a custom element</p>
+</demo-tag>

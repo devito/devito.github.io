@@ -12,6 +12,7 @@
  
         constructor() {
             super();
+            this.SetupShadow();
         }
 
         SetupShadow() {
@@ -19,14 +20,13 @@
                 const supportsDeclarative = HTMLElement.prototype.hasOwnProperty("attachInternals");
                 const internals = supportsDeclarative ? this.attachInternals() : undefined;
 
-                // check for a Declarative Shadow Root.
+                // save the template for future use
                 DemoTag.template = internals?.shadowRoot?.innerHTML;
             }
             else {
                 // check if there is internal
                 const internals = this.attachInternals();
                 if (!internals?.shadowRoot) {
-                    //clonedNode = DemoTag.shadow.cloneNode(true);
                     this.attachShadow({mode: 'open'});
                     this.shadowRoot.innerHTML = DemoTag.template;
                 }                
@@ -34,8 +34,7 @@
         }
 
         connectedCallback() {
-            console.log("Custom element added to page.");
-            this.SetupShadow();          
+            console.log("Custom element added to page.");                      
 
             const toggle = () => {
                 console.log("I'm clicked!");

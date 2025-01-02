@@ -24,7 +24,7 @@
             }
             else {
                 // check if there is internal
-                const internals = supportsDeclarative ? this.attachInternals() : undefined;
+                const internals = this.attachInternals();
                 if (!internals?.shadowRoot) {
                     clonedNode = DemoTag.shadow.clonedNode(true);
                     this.attachShadow({mode: 'open'});

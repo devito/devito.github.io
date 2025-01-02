@@ -9,7 +9,7 @@
 <script type="module">
     class DemoTag extends HTMLElement {
         static shadow = undefined;
-        SetupShadow() {
+        SetupShadow = function() {
             if (!DemoTag.shadow) {
                 const supportsDeclarative = HTMLElement.prototype.hasOwnProperty("attachInternals");
                 const internals = supportsDeclarative ? this.attachInternals() : undefined;

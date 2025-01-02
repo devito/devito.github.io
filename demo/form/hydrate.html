@@ -3,6 +3,7 @@
         <p>This is the shadow dom</p>
         <slot></slot>
     </template>
+    <script>console.log("added first demo-tag");</script>
     <p>This is light dom</p>
 </demo-tag>
 <script type="module">
@@ -30,5 +31,6 @@
     customElements.define("demo-tag", DemoTag);
 </script>
 <demo-tag>
+    <script>console.log("added second demo-tag");</script>
     <p>I am made after being a custom element</p>
 </demo-tag>

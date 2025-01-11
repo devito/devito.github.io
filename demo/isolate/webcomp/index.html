@@ -80,7 +80,11 @@
             // Move light DOM content into the shadow DOM
             while (this.firstChild) {
                 this.shadowRoot.appendChild(this.firstChild);
-            }            
+            }    
+            
+            this.shadowRoot.addEventListener('click', (event) => {
+                console.log(`${target} clicked:`, event.target.textContent);                
+            });
         }
     }
 

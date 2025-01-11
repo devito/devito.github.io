@@ -114,7 +114,7 @@
         _executeInlineScript(code) {
             // Execute the inline script within the shadow DOM context
             const newScript = document.createElement('script');
-            newScript.innerText = code;
+            newScript["text"] = code;
             this.shadowRoot.appendChild(newScript);            
         }
     }

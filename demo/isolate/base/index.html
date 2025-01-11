@@ -34,32 +34,39 @@
     <script>
         
     document.querySelectorAll('.counter').forEach(counter => {
-    const countSpan = counter.querySelector('.count');
-    const incrementBtn = counter.querySelector('.increment');
-    const decrementBtn = counter.querySelector('.decrement');
+        const countSpan = counter.querySelector('.count');
+        const incrementBtn = counter.querySelector('.increment');
+        const decrementBtn = counter.querySelector('.decrement');
 
-    let count = 0;
+        let count = 0;
 
-    incrementBtn.addEventListener('click', () => {
-    count++;
-    countSpan.textContent = count;
-    });
+        incrementBtn.addEventListener('click', () => {
+            count++;
+            countSpan.textContent = count;
+        });
 
-    decrementBtn.addEventListener('click', () => {
-    count--;
-    countSpan.textContent = count;
-    });
+        decrementBtn.addEventListener('click', () => {
+            count--;
+            countSpan.textContent = count;
+        });
     });
 
 
     var addCounter = document.querySelector('.add_counter');
     addCounter.addEventListener('click', () => {
 
-        fetch('/demo/isolate/base/counter.html').then((html) => {
+        fetch('/demo/isolate/base/counter.html')
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.text();
+        } )
+        .then((html) => {
             const container2 = document.querySelector('.main_placeholder');
             const range = document.createRange();
             range.setStart(container2, 0);
-            container2.appendChild(    range.createContextualFragment(html)        );    
+            container2.appendChild(range.createContextualFragment(html));    
     });});
 
     </script>

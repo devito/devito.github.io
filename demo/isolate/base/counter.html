@@ -1,0 +1,30 @@
+<style>
+    span.count {
+           color: yellow;
+           background: blue;
+     }
+ </style>
+ <div class="counter">
+   <button class="decrement">-</button>
+   <span class="count">0</span>
+   <button class="increment">+</button>
+ </div>
+ <script type="module">
+     document.querySelectorAll('.counter').forEach(counter => {
+   const countSpan = counter.querySelector('.count');
+   const incrementBtn = counter.querySelector('.increment');
+   const decrementBtn = counter.querySelector('.decrement');
+
+   let count = 0;
+
+   incrementBtn.addEventListener('click', () => {
+     count++;
+     countSpan.textContent = count;
+   });
+
+   decrementBtn.addEventListener('click', () => {
+     count--;
+     countSpan.textContent = count;
+   });
+ });    
+ </script>

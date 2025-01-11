@@ -32,37 +32,7 @@
         </div>
     </div>
     <script>
-        var html = `
-    <style>
-       span.count {
-              color: yellow;
-              background: blue;
-        }
-    </style>
-    <div class="counter">
-      <button class="decrement">-</button>
-      <span class="count">0</span>
-      <button class="increment">+</button>
-    </div>
-    <script type="module">
-        document.querySelectorAll('.counter').forEach(counter => {
-      const countSpan = counter.querySelector('.count');
-      const incrementBtn = counter.querySelector('.increment');
-      const decrementBtn = counter.querySelector('.decrement');
-
-      let count = 0;
-
-      incrementBtn.addEventListener('click', () => {
-        count++;
-        countSpan.textContent = count;
-      });
-
-      decrementBtn.addEventListener('click', () => {
-        count--;
-        countSpan.textContent = count;
-      });
-    });    </script>`;
-
+        
     document.querySelectorAll('.counter').forEach(counter => {
     const countSpan = counter.querySelector('.count');
     const incrementBtn = counter.querySelector('.increment');
@@ -85,13 +55,12 @@
     var addCounter = document.querySelector('.add_counter');
     addCounter.addEventListener('click', () => {
 
-    const container2 = document.querySelector('.main_placeholder');
-    const range = document.createRange();
-    range.setStart(container2, 0);
-    container2.appendChild(
-    range.createContextualFragment(html)
-    );
-    });
+        fetch('/demo/isolate/base/counter.html').then((html) => {
+            const container2 = document.querySelector('.main_placeholder');
+            const range = document.createRange();
+            range.setStart(container2, 0);
+            container2.appendChild(    range.createContextualFragment(html)        );    
+    });});
 
     </script>
 </body>

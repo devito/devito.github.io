@@ -79,12 +79,42 @@
         connectedCallback() {
             // Move light DOM content into the shadow DOM
             while (this.firstChild) {
-                this.shadowRoot.appendChild(this.firstChild);
+                const child = this.firstChild;
+                if (child.tagName === 'SCRIPT') {
+                    this._handleScript(child); // Handle script separately
+                } else {
+                    this.shadowRoot.appendChild(child);
+                }
             }    
             
             this.shadowRoot.addEventListener('click', (event) => {
-                console.log(`${target} clicked:`, event.target.textContent);                
+                console.log(`${event.target} clicked:`, event.target.textContent);                
             });
+        }
+
+        _handleScript(script) {
+            if (script.src) {
+                // If it's an external script
+                this._loadExternalScript(script.src);
+            } else {
+                // If it's an inline script
+                this._executeInlineScript(script.textContent);
+            }
+            // Remove the original script to prevent it from running in the light DOM
+            script.remove();
+        }
+
+        _loadExternalScript(src) {
+            // Create a new script element for the shadow DOM
+            const newScript = document.createElement('script');
+            newScript.src = src;
+            this.shadowRoot.appendChild(newScript);
+        }
+
+        _executeInlineScript(code) {
+            // Execute the inline script within the shadow DOM context
+            const scriptFunction = new Function('shadowRoot', code);
+            scriptFunction(this.shadowRoot);
         }
     }
 

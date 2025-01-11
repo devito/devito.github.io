@@ -32,8 +32,9 @@
         </div>
     </div>
     <script>
+    _doc = document;
         
-    document.querySelectorAll('.counter').forEach(counter => {
+    _doc.querySelectorAll('.counter').forEach(counter => {
         const countSpan = counter.querySelector('.count');
         const incrementBtn = counter.querySelector('.increment');
         const decrementBtn = counter.querySelector('.decrement');
@@ -52,7 +53,7 @@
     });
 
 
-    var addCounter = document.querySelector('.add_counter');
+    var addCounter = _doc.querySelector('.add_counter');
     addCounter.addEventListener('click', () => {
 
         fetch('/demo/isolate/webcomp/counter.html')
@@ -63,8 +64,8 @@
             return response.text();
         } )
         .then((html) => {
-            const container2 = document.querySelector('.main_placeholder');
-            const range = document.createRange();
+            const container2 = _doc.querySelector('.main_placeholder');
+            const range = _doc.createRange();
             range.setStart(container2, 0);
             container2.appendChild(range.createContextualFragment(html));    
     });});
@@ -106,14 +107,14 @@
 
         _loadExternalScript(src) {
             // Create a new script element for the shadow DOM
-            const newScript = document.createElement('script');
+            const newScript = _doc.createElement('script');
             newScript.src = src;
             this.shadowRoot.appendChild(newScript);
         }
 
         _executeInlineScript(code) {
             // Execute the inline script within the shadow DOM context
-            const newScript = document.createElement('script');
+            const newScript = _doc.createElement('script');
             newScript["text"] = code;
             this.shadowRoot.appendChild(newScript);            
         }

@@ -55,7 +55,7 @@
     var addCounter = document.querySelector('.add_counter');
     addCounter.addEventListener('click', () => {
 
-        fetch('/demo/isolate/base/counter.html')
+        fetch('/demo/isolate/webcomp/counter.html')
         .then((response) => {
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);

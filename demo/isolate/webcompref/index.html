@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Web Component case</title>
+    <style>
+        span.count {
+            color: black;
+            background: white;
+        }
+    </style>
+    <script>
+        _doc = document;
+    </script>
+</head>
+
+<body>
+    <div id="main_container">
+        <div>
+            <button class="add_counter">
+                Add Counter
+            </button>
+        </div>
+        <div class="main_placeholder">
+            <iso-comp>
+                <template shadowrootmode="open">
+                    <div id="counters">
+                        <!-- Individual counter containers -->
+                        <div class="counter">
+                            <button class="decrement">-</button>
+                            <span class="count">0</span>
+                            <button class="increment">+</button>
+                        </div>
+                        <script type="module" src="/demo/isolate/webcompref/counter.js"></script>
+                    </div>
+                </template>
+            </iso-comp>
+        </div>
+    </div>
+    <script type="module" src="/demo/isolate/webcompref/isolationComponent.js"></script>
+    <script type="module">    
+    var addCounter = _doc.querySelector('.add_counter');
+    addCounter.addEventListener('click', () => {
+        const randomNum = Math.floor(Math.random() * 2) + 1;
+        fetch(`/demo/isolate/webcomp/counter${randomNum}.html`)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.text();
+        } )
+        .then((html) => {
+            const container2 = _doc.querySelector('.main_placeholder');
+            const range = _doc.createRange();
+            range.setStart(container2, 0);
+            container2.appendChild(range.createContextualFragment(html));    
+    });});
+    </script>
+</body>
+
+</html>

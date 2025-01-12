@@ -71,14 +71,16 @@
     });});
 
     class IsolationComponent extends HTMLElement {
+        static id = 0;
         constructor() {
             super();
+            id++;
             // Attach a shadow root
             this.attachShadow({ mode: 'open' });
         }
 
         connectedCallback() {
-            _doc = this.shadowRoot;
+            window[`iso${id}`] = this;
             // Move light DOM content into the shadow DOM
             while (this.firstChild) {
                 const child = this.firstChild;
@@ -108,14 +110,14 @@
 
         _loadExternalScript(src) {
             // Create a new script element for the shadow DOM
-            const newScript = _doc.createElement('script');
+            const newScript = document.createElement('script');
             newScript.src = src;
             this.shadowRoot.appendChild(newScript);
         }
 
         _executeInlineScript(code) {
             // Execute the inline script within the shadow DOM context
-            const newScript = _doc.createElement('script');
+            const newScript = document.createElement('script');
             newScript["text"] = code;
             this.shadowRoot.appendChild(newScript);            
         }

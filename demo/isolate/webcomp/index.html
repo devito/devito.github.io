@@ -73,13 +73,11 @@
     class IsolationComponent extends HTMLElement {
         static id = 0;
         constructor() {
+            console.log('iso element applied');
             super();
             IsolationComponent.id++;
             // Attach a shadow root
             this.attachShadow({ mode: 'open' });
-        }
-
-        connectedCallback() {
             window[`iso${IsolationComponent.id}`] = this;
             // Move light DOM content into the shadow DOM
             while (this.firstChild) {
@@ -89,7 +87,11 @@
                 } else {
                     this.shadowRoot.appendChild(child);
                 }
-            }    
+            }   
+        }
+
+        connectedCallback() {
+            console.log('iso element connected');
             
             this.shadowRoot.addEventListener('click', (event) => {
                 console.log(`${event.target} clicked:`, event.target.textContent);                

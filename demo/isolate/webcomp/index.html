@@ -118,7 +118,7 @@
         _executeInlineScript(code) {
             // Execute the inline script within the shadow DOM context
             const newScript = document.createElement('script');
-            var pre = `orgDoc=_doc;_doc = window["iso${id}"].shadowRoot;`;
+            var pre = `orgDoc=_doc;_doc = window["iso${IsolationComponent.id}"].shadowRoot;`;
             var post = `_doc=orgDoc`
             newScript["text"] = pre + code + post;
             this.shadowRoot.appendChild(newScript);            

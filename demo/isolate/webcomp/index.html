@@ -55,7 +55,7 @@
 
     var addCounter = _doc.querySelector('.add_counter');
     addCounter.addEventListener('click', () => {
-        const randomNum = parseFloat((1 + Math.random()).toFixed(2));
+        const randomNum = Math.floor(Math.random() * 2) + 1;
         fetch(`/demo/isolate/webcomp/counter${randomNum}.html`)
         .then((response) => {
             if (!response.ok) {

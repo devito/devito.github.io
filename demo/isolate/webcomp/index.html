@@ -74,13 +74,13 @@
         static id = 0;
         constructor() {
             super();
-            id++;
+            IsolationComponent.id++;
             // Attach a shadow root
             this.attachShadow({ mode: 'open' });
         }
 
         connectedCallback() {
-            window[`iso${id}`] = this;
+            window[`iso${IsolationComponent.id}`] = this;
             // Move light DOM content into the shadow DOM
             while (this.firstChild) {
                 const child = this.firstChild;

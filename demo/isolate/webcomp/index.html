@@ -55,8 +55,8 @@
 
     var addCounter = _doc.querySelector('.add_counter');
     addCounter.addEventListener('click', () => {
-
-        fetch('/demo/isolate/webcomp/counter.html')
+        const randomNum = (1 + Math.random()).toFixed(2);
+        fetch(`/demo/isolate/webcomp/counter${randomNum}.html`)
         .then((response) => {
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);

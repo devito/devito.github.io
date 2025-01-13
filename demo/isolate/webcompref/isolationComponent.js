@@ -54,10 +54,10 @@
             return response.text();
         })
         .then((content) => {
-            jsCode = this.pre + content + this.post;
+            let code = this.pre + content + this.post;
             const newScript = document.createElement('script');
             newScript.src = URL.createObjectURL(
-                new Blob([jsCode], {type: `module`})
+                new Blob([code], {type: `module`})
               );
             this.shadowRoot.appendChild(newScript);
         });

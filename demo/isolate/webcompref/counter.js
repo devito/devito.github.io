@@ -12,8 +12,8 @@ document.querySelectorAll('.counter').forEach(counter => {
         countSpan.textContent = count;
     });    
 
-    _be(incrementBtn, 'click', () => {
-        count++;
+    _be(decrementBtn, 'click', () => {
+        count--;
         countSpan.textContent = count;
     });
 });})();

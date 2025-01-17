@@ -1,18 +1,54 @@
 (function() {
+
+    class DocumentWrapper {
+        #host
+        constructor(host) {
+            this.#host = host;
+            this.body = this.#host.shadowRoot;            
+        }
+
+        querySelector(...args) {
+            return this.body.querySelector(...args);
+        }
+
+        querySelectorAll(...args) {
+            return this.body.querySelectorAll(...args);
+        }
+    }
+
+    class ShadowDomHelper {
+        #host;
+        constructor(host){
+            this.#host = host;
+            this.document = new DocumentWrapper(this.#host);            
+        }
+
+        _be(target, type, callback) {
+            target.addEventListener(type, callback);
+        }
+    }
+
     class IsolationComponent extends HTMLElement {
     static id = 0;
 
     constructor() {
         console.log('iso element applied');
         super();
+
+        let shadow = internals?.shadowRoot;
+
+        if (!shadow) {
+            this.attachShadow({ mode: 'open' });
+        }
+
         IsolationComponent.id++;
         // Attach a shadow root
-        this.attachShadow({ mode: 'open' });
-        window[`iso${IsolationComponent.id}`] = this;
+        
+        window[`iso${IsolationComponent.id}`] = new ShadowDomHelper(this);
 
-        this.pre = `orgDoc=_doc;_doc = window["iso${IsolationComponent.id}"].shadowRoot;`;
-        this.post = `_doc=orgDoc`;
-
+        this.pre = `var sdh=window["iso${IsolationComponent.id}"];(function(document,_be){`;
+        this.post = `})(sdh.document,sdh._be)`;
+        
         // Move light DOM content into the shadow DOM
         while (this.firstChild) {
             const child = this.firstChild;
@@ -21,7 +57,7 @@
             } else {
                 this.shadowRoot.appendChild(child);
             }
-        }   
+        }
     }
 
     connectedCallback() {

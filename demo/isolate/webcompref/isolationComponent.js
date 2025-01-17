@@ -35,6 +35,9 @@
         console.log('iso element applied');
         super();
 
+        const supportsDeclarative = HTMLElement.prototype.hasOwnProperty("attachInternals");
+        const internals = supportsDeclarative ? this.attachInternals() : undefined;
+
         let shadow = internals?.shadowRoot;
 
         if (!shadow) {

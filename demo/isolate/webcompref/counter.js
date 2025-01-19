@@ -1,5 +1,6 @@
 (function(){
 console.log("applied");
+
 document.querySelectorAll('.counter').forEach(counter => {
     const countSpan = counter.querySelector('.count');
     const incrementBtn = counter.querySelector('.increment');
@@ -7,13 +8,16 @@ document.querySelectorAll('.counter').forEach(counter => {
 
     let count = 0;
 
-    _be(incrementBtn, 'click', () => {
-        count++;
-        countSpan.textContent = count;
-    });    
+    function UpdateText() { countSpan.textContent = count; }
+    
+    function increment() { count++; UpdateText();}
 
-    _be(decrementBtn, 'click', () => {
-        count--;
-        countSpan.textContent = count;
-    });
+    function decrement() { count--; UpdateText();}
+
+    function SetupEvents() { 
+        _be(incrementBtn, 'click', increment);
+        _be(decrementBtn, 'click', decrement);
+     }
+
+     SetupEvents();
 });})();

@@ -85,7 +85,7 @@
         })
 
         // resolve globals to context
-        content += `var sdh=window['iso${IsolationComponent.id}'];(function(document,_be)){`
+        content += `var sdh=window['iso${IsolationComponent.id}'];(function(document,_be){`
         this.#modules.forEach(module => {
             content += `var ${module.name} = ${module.id}(document, _be);`;
         })

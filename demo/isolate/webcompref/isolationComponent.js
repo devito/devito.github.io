@@ -14,6 +14,10 @@
         querySelectorAll(...args) {
             return this.body.querySelectorAll(...args);
         }
+
+        addEventListener(...args) {
+            this.body.addEventListener(...args);
+        }
     }
 
     class ShadowDomHelper {

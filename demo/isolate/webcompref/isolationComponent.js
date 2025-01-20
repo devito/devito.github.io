@@ -99,7 +99,7 @@
     _handleScript(script) {    
         if (script.src) {
             // If it's an external script
-            this.#moduleFetches.pushe(this._loadExternalScript(script.src));
+            this.#moduleFetches.push(this._loadExternalScript(script.src));
         } else {
             // If it's an inline script
             this.#inlineScripts.push(script.textContent);

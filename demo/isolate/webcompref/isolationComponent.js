@@ -92,7 +92,7 @@
         
         content += this.#inlineScripts.join(";;");
         content += `})(sdh.document,sdh._be);`;
-        _executeInlineScript(content);
+        this._executeInlineScript(content);
     }
 
     _handleScript(script) {        

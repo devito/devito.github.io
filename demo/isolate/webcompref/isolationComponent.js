@@ -77,13 +77,15 @@
             let content = ``;
 
             // import modules
-            Object.keys(IsolationComponent.#modules).forEach(module => {
+            Object.keys(IsolationComponent.#modules).forEach(key => {
+                let module = IsolationComponent.#modules[key];
                 content += `import ${module.id} from '${module.uri}';`;
             })
 
             // resolve globals to context
             content += `var sdh=window['iso${IsolationComponent.id}'];(function(document,_be){`
-            Object.keys(IsolationComponent.#modules).forEach(module => {
+            Object.keys(IsolationComponent.#modules).forEach(key => {
+                let module = IsolationComponent.#modules[key];
                 content += `var ${module.name} = ${module.id}(document, _be);`;
             })
 

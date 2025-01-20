@@ -1,6 +1,6 @@
 var Counter;
     (function(Counter){
-    console.log("applied");
+    console.log("applied counter");
 
     function init() { 
         document.querySelectorAll('.counter').forEach(counter => {

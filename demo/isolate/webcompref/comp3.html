@@ -1,0 +1,36 @@
+<iso-comp>
+  <style>
+    .image-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .thumbnail {
+      width: 100px;
+      height: auto;
+      cursor: pointer;
+    }
+
+    .large-image {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 110px;
+      /* Adjust based on your layout */
+      width: 300px;
+      height: auto;
+      z-index: 10;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+  <div class="image-container">
+    <img src="https://th.bing.com/th/id/OIP.0jYZweMM1Np2huWff05tLQAAAA?pid=ImgDet&w=199&h=159&c=7" alt="Thumbnail" class="thumbnail">
+    <img src="https://th.bing.com/th/id/OIP.7OWYyU_C2Fbn64dsgRauJwHaF7?rs=1&pid=ImgDetMain" alt="Large Image" class="large-image">
+  </div>
+  <script type="module" src="hovercat.js"></script>
+  <script type="module">
+    HoverCat.init();
+  </script>
+</iso-comp>

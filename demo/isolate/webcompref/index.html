@@ -20,7 +20,7 @@
     <div id="main_container">
         <div>
             <button class="add_counter">
-                Add Counter
+                Add Comps
             </button>
         </div>
         <div class="main_placeholder">
@@ -46,8 +46,8 @@
     <script type="module">    
     var addCounter = _doc.querySelector('.add_counter');
     addCounter.addEventListener('click', () => {
-        const randomNum = Math.floor(Math.random() * 2) + 1;
-        fetch(`/demo/isolate/webcompref/counter${randomNum}.html`)
+        const randomNum = Math.floor(Math.random() * 3) + 1;
+        fetch(`/demo/isolate/webcompref/comp${randomNum}.html`)
         .then((response) => {
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);

@@ -31,6 +31,7 @@
     class IsolationComponent extends HTMLElement {
     static id = 0;
     #inlineScripts = [];
+    #moduleFetches = [];
     #modules = [];
 
     constructor() {
@@ -51,8 +52,8 @@
         
         window[`iso${IsolationComponent.id}`] = new ShadowDomHelper(this);
 
-        this.pre = `var sdh=window["iso${IsolationComponent.id}"];(function(document,_be){`;
-        this.post = `})(sdh.document,sdh._be)`;
+        // this.pre = `var sdh=window["iso${IsolationComponent.id}"];(function(document,_be){`;
+        // this.post = `})(sdh.document,sdh._be)`;
         
         // Move light DOM content into the shadow DOM
         while (this.firstChild) {
@@ -65,7 +66,7 @@
         }
 
         // apply the inline scripts
-        this._applyInlineScripts();
+        Promise.all(this.#moduleFetches).then(_ => {this._applyInlineScripts();});        
     }
 
     connectedCallback() {
@@ -95,10 +96,10 @@
         this._executeInlineScript(content);
     }
 
-    _handleScript(script) {        
+    _handleScript(script) {    
         if (script.src) {
             // If it's an external script
-            this._loadExternalScript(script.src);
+            this.#moduleFetches.pushe(this._loadExternalScript(script.src));
         } else {
             // If it's an inline script
             this.#inlineScripts.push(script.textContent);
@@ -110,7 +111,7 @@
 
     _loadExternalScript(src) {
         // need to override content so fetch first
-        fetch(src)
+        return fetch(src)
         .then((response) => {
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);

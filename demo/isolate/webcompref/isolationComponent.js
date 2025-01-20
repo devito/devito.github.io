@@ -77,13 +77,13 @@
             let content = ``;
 
             // import modules
-            IsolationComponent.#modules.forEach(module => {
+            Object.keys(IsolationComponent.#modules).forEach(module => {
                 content += `import ${module.id} from '${module.uri}';`;
             })
 
             // resolve globals to context
             content += `var sdh=window['iso${IsolationComponent.id}'];(function(document,_be){`
-            IsolationComponent.#modules.forEach(module => {
+            Object.keys(IsolationComponent.#modules).forEach(module => {
                 content += `var ${module.name} = ${module.id}(document, _be);`;
             })
 
@@ -137,7 +137,7 @@
                     newScript.src = uri
                     this.shadowRoot.appendChild(newScript);
 
-                    IsolationComponent.#modules["src"] = { id: "id" + Math.random().toString(16).slice(2), name: modulename, uri: uri };
+                    IsolationComponent.#modules[src] = { id: "id" + Math.random().toString(16).slice(2), name: modulename, uri: uri };
                 });
         }
 

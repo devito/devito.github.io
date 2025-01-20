@@ -13,6 +13,7 @@
     <script>
         _doc = document;
     </script>
+    <script type="module" src="/demo/isolate/webcompref/isolationComponent.js"></script>
 </head>
 
 <body>
@@ -33,12 +34,15 @@
                             <button class="increment">+</button>
                         </div>
                         <script type="module" src="/demo/isolate/webcompref/counter.js"></script>
+                        <script type="module">
+                            Counter.init();
+                        </script>
                     </div>
                 </template>
             </iso-comp>
         </div>
     </div>
-    <script type="module" src="/demo/isolate/webcompref/isolationComponent.js"></script>
+    
     <script type="module">    
     var addCounter = _doc.querySelector('.add_counter');
     addCounter.addEventListener('click', () => {

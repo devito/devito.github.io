@@ -30,6 +30,8 @@
 
     class IsolationComponent extends HTMLElement {
     static id = 0;
+    #inlineScripts = [];
+    #modules = [];
 
     constructor() {
         console.log('iso element applied');
@@ -56,29 +58,52 @@
         while (this.firstChild) {
             const child = this.firstChild;
             if (child.tagName === 'SCRIPT') {
-                this._handleScript(child); // Handle script separately
+                this._handleScript(child);                
             } else {
                 this.shadowRoot.appendChild(child);
             }
         }
+
+        // apply the inline scripts
+        this._applyInlineScripts();
     }
 
     connectedCallback() {
         console.log('iso element connected');
         
-        this.shadowRoot.addEventListener('click', (event) => {
-            console.log(`${event.target} clicked:`, event.target.textContent);                
-        });
+        // this.shadowRoot.addEventListener('click', (event) => {
+        //     console.log(`${event.target} clicked:`, event.target.textContent);                
+        // });
     }
 
-    _handleScript(script) {
+    _applyInlineScripts() {
+        let content = ``;
+
+        // import modules
+        this.#modules.forEach(module => {
+            content += `import ${module.id} from '${module.uri}';`;
+        })
+
+        // resolve globals to context
+        content += `var sdh=window['iso${IsolationComponent.id}'];(function(document,_be)){`
+        this.#modules.forEach(module => {
+            content += `var ${module.name} = ${module.id}(document, _be);`;
+        })
+        
+        content += this.#inlineScripts.join(";;");
+        content += `})(sdh.document,sdh._be);`;
+        _executeInlineScript(content);
+    }
+
+    _handleScript(script) {        
         if (script.src) {
             // If it's an external script
             this._loadExternalScript(script.src);
         } else {
             // If it's an inline script
-            this._executeInlineScript(script.textContent);
-        }
+            this.#inlineScripts.push(script.textContent);
+            //this._executeInlineScript(script.textContent);
+        }        
         // Remove the original script to prevent it from running in the light DOM
         script.remove();
     }
@@ -93,19 +118,34 @@
             return response.text();
         })
         .then((content) => {
-            let code = this.pre + content + this.post;
+            // get the module name
+            var modulenameFinder = /var\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*;/;
+            var modulematch = content.match(modulenameFinder);
+            var modulename;
+            if (modulematch) {
+                modulename = modulematch[1];
+            }
+
+            const code = `export default function(document,_be){${content}; return ${modulename}};`
+
             const newScript = document.createElement('script');
-            newScript.src = URL.createObjectURL(
-                new Blob([code], {type: `module`})
+            newScript.type = "module";
+            const uri = URL.createObjectURL(
+                new Blob([code], {type: `application/javascript`})
               );
+            newScript.src = uri
             this.shadowRoot.appendChild(newScript);
+
+            this.#modules.push({id: "id" + Math.random().toString(16).slice(2), name: modulename, uri: uri });
         });
     }
 
     _executeInlineScript(code) {
         // Execute the inline script within the shadow DOM context
         const newScript = document.createElement('script');
-        newScript["text"] = this.pre + code + this.post;
+        newScript.type = "module";
+
+        newScript["text"] = code;
         this.shadowRoot.appendChild(newScript);            
     }
 }

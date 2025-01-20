@@ -1,10 +1,10 @@
-(function() {
+(function () {
 
     class DocumentWrapper {
         #host
         constructor(host) {
             this.#host = host;
-            this.body = this.#host.shadowRoot;            
+            this.body = this.#host.shadowRoot;
         }
 
         querySelector(...args) {
@@ -18,9 +18,9 @@
 
     class ShadowDomHelper {
         #host;
-        constructor(host){
+        constructor(host) {
             this.#host = host;
-            this.document = new DocumentWrapper(this.#host);            
+            this.document = new DocumentWrapper(this.#host);
         }
 
         _be(target, type, callback) {
@@ -29,127 +29,127 @@
     }
 
     class IsolationComponent extends HTMLElement {
-    static id = 0;
-    #inlineScripts = [];
-    #moduleFetches = [];
-    #modules = [];
+        static id = 0;
+        static #modules = [];
+        #inlineScripts = [];
+        #moduleFetches = [];
 
-    constructor() {
-        console.log('iso element applied');
-        super();
+        constructor() {
+            console.log('iso element applied');
+            super();
 
-        const supportsDeclarative = HTMLElement.prototype.hasOwnProperty("attachInternals");
-        const internals = supportsDeclarative ? this.attachInternals() : undefined;
+            const supportsDeclarative = HTMLElement.prototype.hasOwnProperty("attachInternals");
+            const internals = supportsDeclarative ? this.attachInternals() : undefined;
 
-        let shadow = internals?.shadowRoot;
+            let shadow = internals?.shadowRoot;
 
-        if (!shadow) {
-            this.attachShadow({ mode: 'open' });
+            if (!shadow) {
+                this.attachShadow({ mode: 'open' });
+            }
+
+            IsolationComponent.id++;
+            // Attach a shadow root
+
+            window[`iso${IsolationComponent.id}`] = new ShadowDomHelper(this);
+
+            // this.pre = `var sdh=window["iso${IsolationComponent.id}"];(function(document,_be){`;
+            // this.post = `})(sdh.document,sdh._be)`;
+
+            // Move light DOM content into the shadow DOM
+            while (this.firstChild) {
+                const child = this.firstChild;
+                if (child.tagName === 'SCRIPT') {
+                    this._handleScript(child);
+                } else {
+                    this.shadowRoot.appendChild(child);
+                }
+            }
+
+            // apply the inline scripts
+            Promise.all(this.#moduleFetches).then(_ => { this._applyInlineScripts(); });
         }
 
-        IsolationComponent.id++;
-        // Attach a shadow root
-        
-        window[`iso${IsolationComponent.id}`] = new ShadowDomHelper(this);
+        connectedCallback() {
+            console.log('iso element connected');
+        }
 
-        // this.pre = `var sdh=window["iso${IsolationComponent.id}"];(function(document,_be){`;
-        // this.post = `})(sdh.document,sdh._be)`;
-        
-        // Move light DOM content into the shadow DOM
-        while (this.firstChild) {
-            const child = this.firstChild;
-            if (child.tagName === 'SCRIPT') {
-                this._handleScript(child);                
+        _applyInlineScripts() {
+            let content = ``;
+
+            // import modules
+            IsolationComponent.#modules.forEach(module => {
+                content += `import ${module.id} from '${module.uri}';`;
+            })
+
+            // resolve globals to context
+            content += `var sdh=window['iso${IsolationComponent.id}'];(function(document,_be){`
+            IsolationComponent.#modules.forEach(module => {
+                content += `var ${module.name} = ${module.id}(document, _be);`;
+            })
+
+            content += this.#inlineScripts.join(";;");
+            content += `})(sdh.document,sdh._be);`;
+            this._executeInlineScript(content);
+        }
+
+        _handleScript(script) {
+            if (script.src) {
+                // If it's an external script
+                this.#moduleFetches.push(this._loadExternalScript(script.src));
             } else {
-                this.shadowRoot.appendChild(child);
+                // If it's an inline script
+                this.#inlineScripts.push(script.textContent);
+                //this._executeInlineScript(script.textContent);
             }
+            // Remove the original script to prevent it from running in the light DOM
+            script.remove();
         }
 
-        // apply the inline scripts
-        Promise.all(this.#moduleFetches).then(_ => {this._applyInlineScripts();});        
-    }
+        _loadExternalScript(src) {
 
-    connectedCallback() {
-        console.log('iso element connected');
-        
-        // this.shadowRoot.addEventListener('click', (event) => {
-        //     console.log(`${event.target} clicked:`, event.target.textContent);                
-        // });
-    }
-
-    _applyInlineScripts() {
-        let content = ``;
-
-        // import modules
-        this.#modules.forEach(module => {
-            content += `import ${module.id} from '${module.uri}';`;
-        })
-
-        // resolve globals to context
-        content += `var sdh=window['iso${IsolationComponent.id}'];(function(document,_be){`
-        this.#modules.forEach(module => {
-            content += `var ${module.name} = ${module.id}(document, _be);`;
-        })
-        
-        content += this.#inlineScripts.join(";;");
-        content += `})(sdh.document,sdh._be);`;
-        this._executeInlineScript(content);
-    }
-
-    _handleScript(script) {    
-        if (script.src) {
-            // If it's an external script
-            this.#moduleFetches.push(this._loadExternalScript(script.src));
-        } else {
-            // If it's an inline script
-            this.#inlineScripts.push(script.textContent);
-            //this._executeInlineScript(script.textContent);
-        }        
-        // Remove the original script to prevent it from running in the light DOM
-        script.remove();
-    }
-
-    _loadExternalScript(src) {
-        // need to override content so fetch first
-        return fetch(src)
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
+            if (IsolationComponent.#modules[src]) {
+                return Promise.resolve();
             }
-            return response.text();
-        })
-        .then((content) => {
-            // get the module name
-            var modulenameFinder = /var\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*;/;
-            var modulematch = content.match(modulenameFinder);
-            var modulename;
-            if (modulematch) {
-                modulename = modulematch[1];
-            }
+            // need to override content so fetch first
+            return fetch(src)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.text();
+                })
+                .then((content) => {
+                    // get the module name
+                    var modulenameFinder = /var\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*;/;
+                    var modulematch = content.match(modulenameFinder);
+                    var modulename;
+                    if (modulematch) {
+                        modulename = modulematch[1];
+                    }
 
-            const code = `export default function(document,_be){${content}; return ${modulename}};`
+                    const code = `export default function(document,_be){${content}; return ${modulename}};`
 
+                    const newScript = document.createElement('script');
+                    newScript.type = "module";
+                    const uri = URL.createObjectURL(
+                        new Blob([code], { type: `application/javascript` })
+                    );
+                    newScript.src = uri
+                    this.shadowRoot.appendChild(newScript);
+
+                    IsolationComponent.#modules["src"] = { id: "id" + Math.random().toString(16).slice(2), name: modulename, uri: uri };
+                });
+        }
+
+        _executeInlineScript(code) {
+            // Execute the inline script within the shadow DOM context
             const newScript = document.createElement('script');
             newScript.type = "module";
-            const uri = URL.createObjectURL(
-                new Blob([code], {type: `application/javascript`})
-              );
-            newScript.src = uri
+
+            newScript["text"] = code;
             this.shadowRoot.appendChild(newScript);
-
-            this.#modules.push({id: "id" + Math.random().toString(16).slice(2), name: modulename, uri: uri });
-        });
+        }
     }
 
-    _executeInlineScript(code) {
-        // Execute the inline script within the shadow DOM context
-        const newScript = document.createElement('script');
-        newScript.type = "module";
-
-        newScript["text"] = code;
-        this.shadowRoot.appendChild(newScript);            
-    }
-}
-
-customElements.define('iso-comp', IsolationComponent);
+    customElements.define('iso-comp', IsolationComponent);
 })();

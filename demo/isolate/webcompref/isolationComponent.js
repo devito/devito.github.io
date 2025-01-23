@@ -52,32 +52,43 @@
             }
 
             IsolationComponent.id++;
-            // Attach a shadow root
 
-            window[`iso${IsolationComponent.id}`] = new ShadowDomHelper(this);
+            let helperinstance = new ShadowDomHelper(this);
+            window[`iso${IsolationComponent.id}`] = helperinstance;
 
-            // this.pre = `var sdh=window["iso${IsolationComponent.id}"];(function(document,_be){`;
-            // this.post = `})(sdh.document,sdh._be)`;
+            let scopedInstanceVarName = 'sdh';
+            let [iifeparams, iifeargs] = this.#perameterList(helperinstance, scopedInstanceVarName);            
 
             // Move light DOM content into the shadow DOM
             while (this.firstChild) {
                 const child = this.firstChild;
                 if (child.tagName === 'SCRIPT') {
-                    this._handleScript(child);
+                    this._handleScript(child, iifeparams);
                 } else {
                     this.shadowRoot.appendChild(child);
                 }
             }
 
             // apply the inline scripts
-            Promise.all(this.#moduleFetches).then(_ => { this._applyInlineScripts(); });
+            Promise.all(this.#moduleFetches).then(_ => { this._applyInlineScripts(scopedInstanceVarName, iifeparams, iifeargs); });
         }
 
         connectedCallback() {
             console.log('iso element connected');
         }
 
-        _applyInlineScripts() {
+        #perameterList(instance, scopedVarName) {
+            const allOwnKeys = Object.getOwnPropertyNames(instance);
+            const prototypeKeys = Object.getOwnPropertyNames(Object.getPrototypeOf(instance)).filter(key => key !== 'constructor');            
+
+            const allKeys = [...new Set([...allOwnKeys, ...prototypeKeys])];
+            
+            return [allKeys.join(','), allKeys.map(item => `${scopedVarName}.${item}`).join(',')];
+        }
+
+        _applyInlineScripts(scopedInstanceVarName, iifeparams, iifeargs) {
+            
+
             let content = ``;
 
             // import modules
@@ -87,31 +98,30 @@
             })
 
             // resolve globals to context
-            content += `var sdh=window['iso${IsolationComponent.id}'];(function(document,_be){`
+            content += `var ${scopedInstanceVarName}=window['iso${IsolationComponent.id}'];(function(${iifeparams}){`
             Object.keys(IsolationComponent.#modules).forEach(key => {
                 let module = IsolationComponent.#modules[key];
-                content += `var ${module.name} = ${module.id}(document, _be);`;
+                content += `var ${module.name} = ${module.id}(${iifeparams});`;
             })
 
             content += this.#inlineScripts.join(";;");
-            content += `})(sdh.document,sdh._be);`;
+            content += `})(${iifeargs});`;
             this._executeInlineScript(content);
         }
 
-        _handleScript(script) {
+        _handleScript(script, iifeparams) {
             if (script.src) {
                 // If it's an external script
-                this.#moduleFetches.push(this._loadExternalScript(script.src));
+                this.#moduleFetches.push(this._loadExternalScript(script.src, iifeparams));
             } else {
                 // If it's an inline script
                 this.#inlineScripts.push(script.textContent);
-                //this._executeInlineScript(script.textContent);
             }
             // Remove the original script to prevent it from running in the light DOM
             script.remove();
         }
 
-        _loadExternalScript(src) {
+        _loadExternalScript(src, iifeparams) {
 
             if (IsolationComponent.#modules[src]) {
                 return Promise.resolve();
@@ -133,7 +143,7 @@
                         modulename = modulematch[1];
                     }
 
-                    const code = `export default function(document,_be){${content}; return ${modulename}};`
+                    const code = `export default function(${iifeparams}){${content}; return ${modulename}};`
 
                     const newScript = document.createElement('script');
                     newScript.type = "module";

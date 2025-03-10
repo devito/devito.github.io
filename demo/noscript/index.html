@@ -2,13 +2,6 @@
 
 <head>
     <title>Testing noscript</title>
-    <script>
-        var msgplacement = document.getElementById("msg");
-        var msgpar = document.createElement("p");
-        msgpar.innerText = "You have JS enabled.  Please turn off to test no JS effects."
-        msgplacement.appendChild(msgpar);
-    </script>
-    
 </head>
 
 <body>
@@ -18,6 +11,12 @@
         <p>You have JS disabled. Check if expectations are meet</p>
         <img src="/t.v?d=info" />
     </noscript>
+    <script>
+        var msgplacement = document.getElementById("msg");
+        var msgpar = document.createElement("p");
+        msgpar.innerText = "You have JS enabled.  Please turn off to test no JS effects."
+        msgplacement.appendChild(msgpar);
+    </script>
 </body>
 
 </html>

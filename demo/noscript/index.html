@@ -1,4 +1,6 @@
 <html>
+
+<head>
     <title>Testing noscript</title>
     <script>
         var msgplacement = document.getElementById("msg");
@@ -7,10 +9,13 @@
         msgplacement.appendChild(msgpar);
     </script>
     <noscript>
-        <p>You have JS disabled.  Check if expectations are meet</p>
-        <img src="/t.v?d=info"/>
+        <p>You have JS disabled. Check if expectations are meet</p>
+        <img src="/t.v?d=info" />
     </noscript>
-    <body>
-        <div id="msg"></div>
-    </body>    
+</head>
+
+<body>
+    <div id="msg"></div>
+</body>
+
 </html>

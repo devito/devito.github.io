@@ -64,11 +64,12 @@ footer a:hover {
 }
 
 .intro {
+    container-type: inline-size;
     display: grid;
-    grid-template-columns: 1.65fr 0.75fr;
+    grid-template-columns: minmax(0, 2fr) minmax(16rem, 0.8fr);
     column-gap: clamp(3rem, 6vw, 5rem);
     row-gap: 1.25rem;
-    padding: clamp(3.5rem, 6vw, 5rem) 0;
+    padding: clamp(3rem, 5cqi, 4rem) 0;
     border-bottom: 1px solid var(--line);
 }
 
@@ -84,11 +85,11 @@ footer a:hover {
 
 h1 {
     grid-column: 1;
-    max-width: 800px;
     margin: 0;
-    font-size: clamp(2.8rem, 4.7vw, 4.25rem);
-    line-height: 1.02;
+    font-size: clamp(2.6rem, 5.2cqi, 3.65rem);
+    line-height: 1;
     letter-spacing: -0.06em;
+    text-wrap: balance;
 }
 
 .intro-details {
@@ -97,11 +98,12 @@ h1 {
     align-self: start;
     padding-top: 0.25rem;
     color: var(--muted);
-    font-size: 1rem;
+    font-size: clamp(0.95rem, 1.45cqi, 1.05rem);
 }
 
 .intro-details p {
     margin: 0;
+    text-wrap: pretty;
 }
 
 .connection-note {
@@ -112,15 +114,16 @@ h1 {
 
 .work {
     display: grid;
-    grid-template-columns: 0.55fr 1.45fr;
+    grid-template-columns: minmax(12rem, 0.55fr) minmax(0, 1.45fr);
     gap: clamp(3rem, 6vw, 5rem);
-    padding: clamp(2.75rem, 5vw, 4rem) 0;
+    padding: clamp(2.25rem, 4vw, 3.5rem) 0;
 }
 
 .section-title h2 {
     margin: 0;
     font-size: clamp(1.8rem, 3vw, 2.6rem);
     letter-spacing: -0.04em;
+    text-wrap: balance;
 }
 
 .project {
@@ -151,6 +154,10 @@ h1 {
 .project strong,
 .project small {
     display: block;
+}
+
+.project small {
+    text-wrap: pretty;
 }
 
 .project strong {
@@ -199,9 +206,6 @@ footer div {
         max-width: 620px;
     }
 
-    h1 {
-        font-size: clamp(2.9rem, 14vw, 4.5rem);
-    }
 }
 
 @media (prefers-reduced-motion: reduce) {

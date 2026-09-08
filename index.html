@@ -6,17 +6,35 @@
     <meta name="description" content="Lawrence Joel is a software engineering manager building and directing large-scale platforms and frameworks.">
     <title>Lawrence Joel | Software Engineering Manager</title>
     <link rel="icon" href="data:,">
+    <script>
+        try {
+            const theme = localStorage.getItem("portfolio-theme");
+            if (theme === "light" || theme === "dark") {
+                document.documentElement.dataset.theme = theme;
+            }
+        } catch (error) {
+            console.warn("Unable to restore the saved color theme.", error);
+        }
+    </script>
     <link rel="stylesheet" href="styles.css">
+    <script src="theme.js" defer></script>
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <header>
         <a class="name" href="/">Lawrence Joel</a>
-        <a class="connect-link" href="https://www.linkedin.com/in/lawrence-joel-848b9521/" aria-label="Connect with Lawrence Joel on LinkedIn">
-            Connect <span aria-hidden="true">↗</span>
-        </a>
+        <div class="header-actions">
+            <button class="theme-toggle" type="button" aria-label="Switch color theme">
+                <span class="theme-icon" aria-hidden="true"></span>
+                <span class="theme-label">Theme</span>
+            </button>
+            <a class="connect-link" href="https://www.linkedin.com/in/lawrence-joel-848b9521/" aria-label="Connect with Lawrence Joel on LinkedIn">
+                Connect <span aria-hidden="true">↗</span>
+            </a>
+        </div>
     </header>
 
-    <main>
+    <main id="main-content" tabindex="-1">
         <section class="intro">
             <p class="role">Software Engineering Manager · Microsoft</p>
             <h1>I lead Bing's client platform team, building the infrastructure that delivers web experiences to more than a billion people.</h1>
@@ -46,32 +64,32 @@
                     </span>
                     <span class="arrow" aria-hidden="true">↗</span>
                 </a>
-                <a class="project" href="#">
+                <article class="project">
                     <span class="project-number">02</span>
                     <span>
                         <strong>Featured project</strong>
                         <small>Add a short description of the project here</small>
                     </span>
-                    <span class="arrow" aria-hidden="true">↗</span>
-                </a>
-                <a class="project" href="#">
+                    <span class="project-status">Coming soon</span>
+                </article>
+                <article class="project">
                     <span class="project-number">03</span>
                     <span>
                         <strong>Featured project</strong>
                         <small>Add a short description of the project here</small>
                     </span>
-                    <span class="arrow" aria-hidden="true">↗</span>
-                </a>
+                    <span class="project-status">Coming soon</span>
+                </article>
             </div>
         </section>
     </main>
 
     <footer>
         <p>Lawrence Joel · Seattle, WA</p>
-        <div>
+        <nav aria-label="Social links">
             <a href="https://github.com/devito">GitHub</a>
             <a href="https://www.linkedin.com/in/lawrence-joel-848b9521/">LinkedIn</a>
-        </div>
+        </nav>
     </footer>
 </body>
 </html>
